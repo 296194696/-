@@ -72,7 +72,6 @@
         var blockid=null;
         table.render({
             elem: '#block'
-            ,url:'/charge/info/readall'
             ,height: 400
             ,title: '水费明细表'
             ,toolbar: true
@@ -149,6 +148,7 @@
                 page: {
                     curr: 1 //重新从第 1 页开始
                 }
+                ,url:'/charge/info/readall'
                 ,where: {
                     iyear: data.iyear
                 }

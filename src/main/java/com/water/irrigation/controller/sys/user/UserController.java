@@ -136,6 +136,43 @@ public class UserController {
     }
 
     /**
+     * 修改 用户表信息
+     * @param sysUserDto 用户表数据传输对象
+     * @return 请求返回实体信息
+     */
+    @RequestMapping("user/info/add")
+    @ResponseBody
+    public ResultEntity add(SysUserDto sysUserDto) {
+        ResultEntity resultEntity = new ResultEntity();
+        try {
+            SysUser sysUser =
+                    dozerHelperUtils.convert(sysUserDto, SysUser.class);
+            Integer iroleid= Integer.valueOf(sysUser.getIroleid());
+            if(iroleid==1){
+                sysUser.setRole("admin");
+                sysUser.setRolename("管理员");
+            }
+            if(iroleid==2){
+                sysUser.setRole("mito");
+                sysUser.setRolename("普通用水户");
+            }
+            if(iroleid==3){
+                sysUser.setRole("dept");
+                sysUser.setRolename("用水单位");
+            }
+            SysUser result = this.sysUserService.
+                    saveUser(sysUser);
+            resultEntity.setCode(ResultEntity.StatusCode.SUCCESS.getCode());
+            resultEntity.setContent(result);
+        }catch (Exception e) {
+            resultEntity.setCode(ResultEntity.StatusCode.FAILURE.getCode());
+            resultEntity.setMsg("修改 用户信息出错:"+e.getMessage());
+            log.error("修改 用户信息出错", e);
+        }
+        return resultEntity;
+    }
+
+    /**
      * 删除 用户表信息
      * @param sysUserDto 用户表数据传输对象
      * @return 返回删除是否成功得对象

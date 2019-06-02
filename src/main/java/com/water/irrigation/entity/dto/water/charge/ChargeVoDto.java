@@ -18,4 +18,6 @@ public class ChargeVoDto extends ChargeVo {
      */
     private Integer limit = 10;
 
+    private Long iuserid;
+
 }

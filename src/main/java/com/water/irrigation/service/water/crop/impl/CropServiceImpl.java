@@ -48,6 +48,7 @@ public class CropServiceImpl implements CropService {
     private SysUserDao sysUserDao;
     @Autowired
     private RateDao rateDao;
+
     /**
      * 根据条件获取对应的作物信息数据
      *
@@ -100,6 +101,9 @@ public class CropServiceImpl implements CropService {
         BlockInfo blockInfo=blockInfoDao.findById(cropObj.getIblockid()).get();
         Double area=blockInfo.getSarea();
         cropObj.setNeedwater(area*crop.getIquantity());
+        cropObj.setSname(crop.getSname());
+        cropObj.setIquantity(cropObj.getIquantity());
+        cropObj.setIyear(cropObj.getIyear());
         return cropDao.save(cropObj);
     }
 
@@ -138,6 +142,7 @@ public class CropServiceImpl implements CropService {
         charge.setWatermoney(crop.getNeedwater()*suserrate);
         charge.setItype(0);
         charge.setCrop(crop);
+        charge.setSysUserCharge(sysUser);
         return charge;
     }
 

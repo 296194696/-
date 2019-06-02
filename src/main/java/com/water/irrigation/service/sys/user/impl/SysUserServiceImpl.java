@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -38,10 +40,19 @@ public class SysUserServiceImpl implements SysUserService {
         }
     }
     @Override
-    public void saveUser(SysUser sysUser){
-        sysUserDao.save(sysUser);
+    public SysUser saveUser(SysUser sysUser){
+        return sysUserDao.save(sysUser);
     }
 
+    @Override
+    public SysUser getUser(){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        String username=userDetails.getUsername();
+        SysUser sysUser=sysUserDao.findByUsername(username);
+        return sysUser;
+    }
     /**
      * 根据条件获取对应的用户信息数据
      *
@@ -55,9 +66,9 @@ public class SysUserServiceImpl implements SysUserService {
     }
     
     /**
-     * 修改工会组织
-     * @param SysUser 工会组织信息
-     * @return  更新后工会组织信息
+     * 修改用户
+     * @param SysUser 用户信息
+     * @return  更新后用户信息
      */
     @Override
     public SysUser update(SysUser SysUser) {
@@ -71,7 +82,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     /**
-     * 删除工会组织信息
+     * 删除用户信息
      * @param sysCompanys 需要删除的用户信息
      */
     @Override

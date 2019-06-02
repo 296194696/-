@@ -7,11 +7,16 @@ import com.water.irrigation.service.sys.menu.SysMenuService;
 import com.water.irrigation.utils.dozer.DozerHelperUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -34,7 +39,37 @@ public class MenuController {
         List<SysMenu> sysMenus=sysMenuService.findByLevel(1);
         return sysMenus;
     }
-
+    @RequestMapping("/menurole")
+    @ResponseBody
+    public SysMenu tblMenuRole(Long id){
+        SysMenu sysMenus=sysMenuService.findById(id);
+        return sysMenus;
+    }
+    /**
+     * 获取 资产数据列表
+     * @param sysMenuDto  资产数据传输对象
+     * @return 请求返回实体信息
+     */
+    @RequestMapping("menu/readall")
+    @ResponseBody
+    public List<SysMenu> readAll(SysMenuDto sysMenuDto){
+        List<SysMenu> resultEntity=new ArrayList<SysMenu>();
+        try {
+            Sort sort = new Sort(Sort.Direction.ASC,"score");
+            Integer pageno = sysMenuDto.getPageno();
+//            Integer pagesize = sysMenuDto.getPagesize();
+            pageno = pageno >= 1 ? pageno-1 : 0;
+            sysMenuDto.setLevel(1);
+            Pageable pageable = PageRequest.of(pageno,20,sort);
+            Page<SysMenu> classifies =
+                    this.sysMenuService.findAll(sysMenuDto,pageable);
+            resultEntity=classifies.getContent();
+        }catch(Exception e) {
+            log.error("获取菜单数据出错", e);
+        }
+        return resultEntity;
+    }
+    
     /**
      * 添加 菜单信息
      * @param SysMenuDto 菜单表数据传输对象
@@ -72,9 +107,10 @@ public class MenuController {
 
             SysMenu sysMenu =
                     dozerHelperUtils.convert(sysMenuDto, SysMenu.class);
+            SysMenu sysMenuFind=sysMenuService.findById(sysMenu.getIndocno());
+            sysMenu.setChildren(sysMenuFind.getChildren());
             SysMenu result = this.sysMenuService.
                     update(sysMenu);
-
             resultEntity.setCode(ResultEntity.StatusCode.SUCCESS.getCode());
             resultEntity.setContent(result);
         }catch (Exception e) {

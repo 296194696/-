@@ -14,7 +14,7 @@ public interface SysUserService {
 
     boolean checkNameIsExistOrNot(String username);
 
-    void saveUser(SysUser sysUser);
+    SysUser saveUser(SysUser sysUser);
 
     /**
      * 根据条件获取对应的资产信息数据
@@ -29,6 +29,11 @@ public interface SysUserService {
 
     void delete(List<SysUser> sysCompanys);
 
+    /**
+     * 获取当前登录用户
+     * @return
+     */
+    SysUser getUser();
 }
 
 

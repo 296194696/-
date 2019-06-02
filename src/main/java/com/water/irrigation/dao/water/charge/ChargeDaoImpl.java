@@ -34,9 +34,9 @@ public class ChargeDaoImpl {
             , Pageable pageable) {
         StringBuilder dataSql = new StringBuilder(
                 " select sum,a.iyear,need,itype " +
-                        " from (select sum(watermoney) as sum,iyear from water_charge  GROUP BY iyear) a " +
+                        " from (select sum(watermoney) as sum,iyear from water_charge where iuserid=:iuserid GROUP BY iyear) a " +
                         " left join  ( select sum(watermoney) as need ,iyear,itype  from water_charge  " +
-                        " where itype=0  GROUP BY iyear) b on  a.iyear=b.iyear   ");
+                        " where itype=0 and iuserid=:iuserid GROUP BY iyear) b on  a.iyear=b.iyear   ");
         StringBuilder whereSql = new StringBuilder(" WHERE 1=1");
         StringBuilder countSql = new StringBuilder("select count(1) from (");
         if(!StringUtils.isEmpty(chargeVoDto.getIyear())) {
@@ -49,7 +49,10 @@ public class ChargeDaoImpl {
         Query dataQuery = entityManager.createNativeQuery(dataSql.toString(), ChargeVo.class);
 
         Query countQuery = entityManager.createNativeQuery(countSql.toString());
-
+       // if(!StringUtils.isEmpty(chargeVoDto.getIuserid())) {
+            dataQuery.setParameter("iuserid", chargeVoDto.getIuserid());
+            countQuery.setParameter("iuserid", chargeVoDto.getIuserid());
+       // }
         if(!StringUtils.isEmpty(chargeVoDto.getIyear())) {
             dataQuery.setParameter("iyear", chargeVoDto.getIyear());
             countQuery.setParameter("iyear", chargeVoDto.getIyear());

@@ -39,4 +39,6 @@ public interface ChargeService {
     List<Charge> updateSum(Charge charge);
 
     Map<String, List> findSumBySname();
+
+    Map findChargeCity();
 }

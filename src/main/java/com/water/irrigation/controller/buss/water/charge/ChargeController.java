@@ -210,4 +210,23 @@ public class ChargeController {
         }
         return resultEntity;
     }
+
+    /**
+     * 根据作物名称查询金额总和   渲染到饼状图
+     * @return
+     */
+    @RequestMapping("findChargeCity")
+    public ResultEntity findChargeCity(){
+        ResultEntity resultEntity = new ResultEntity();
+        try {
+            Map result=chargeService.findChargeCity();
+            resultEntity.setCode(ResultEntity.StatusCode.SUCCESS.getCode());
+            resultEntity.setContent(result);
+        }catch (Exception e) {
+            resultEntity.setCode(ResultEntity.StatusCode.FAILURE.getCode());
+            resultEntity.setMsg("获取 政区统计金额出错:"+e.getMessage());
+            log.error("获取 政区统计金额出错", e);
+        }
+        return resultEntity;
+    }
 }

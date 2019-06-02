@@ -87,6 +87,7 @@ public class BlockInfoServiceImpl implements BlockInfoService {
         }
         //UpdateHelperUtils.copyNullProperties(orgObj, BlockInfo);
         blockInfo.setSarea(blockInfo.getSquarex()*blockInfo.getSquarey());
+        blockInfo.setSysUser(orgObj.getSysUser());
         return blockInfoDao.save(blockInfo);
     }
 
@@ -146,6 +147,10 @@ public class BlockInfoServiceImpl implements BlockInfoService {
                 if (condition.getScity()!=null && !"".equals(condition.getScity())) {
                     listPredicates.add(cb.like(root.get("scity").as(String.class),
                             "%"+condition.getScity()+"%"));
+                }
+                if (condition.getIuserid()!=null && !"".equals(condition.getIuserid())) {
+                    listPredicates.add(cb.like(root.get("iuserid").as(String.class),
+                            "%"+condition.getIuserid()+"%"));
                 }
 //                listPredicates.add(cb.equal(root.get("idel").as(Integer.class),0 ));
                 Predicate[] arrayPredicates = new Predicate[listPredicates.size()];

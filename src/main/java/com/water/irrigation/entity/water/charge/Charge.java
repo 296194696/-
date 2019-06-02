@@ -32,7 +32,16 @@ public class Charge extends BaseEntity {
      *年份
      */
     private Integer iyear;
-
+    /**
+     *用户ID
+     */
+    @Column(insertable = false,updatable = false)
+    private Long  iuserid;
+    /**
+     *地块ID
+     */
+    @Column(insertable = false,updatable = false)
+    private Long  icropid;
     @JsonIgnore//防止死循环，导致栈溢出
     @JoinColumn(name="iuserid")//外键列的列名
     @ManyToOne(fetch= FetchType.LAZY)

@@ -1,13 +1,17 @@
 package com.water.irrigation.service.water.charge.impl;
 
+import com.water.irrigation.dao.water.charge.ChargeCityDao;
 import com.water.irrigation.dao.water.charge.ChargeDao;
 import com.water.irrigation.dao.water.charge.ChargeDaoImpl;
 import com.water.irrigation.dao.water.charge.ChargeVoDao;
 import com.water.irrigation.entity.dto.water.charge.ChargeDto;
 import com.water.irrigation.entity.dto.water.charge.ChargeVoDto;
+import com.water.irrigation.entity.sys.user.SysUser;
+import com.water.irrigation.entity.vo.charge.ChargeCity;
 import com.water.irrigation.entity.vo.charge.ChargeSumVo;
 import com.water.irrigation.entity.vo.charge.ChargeVo;
 import com.water.irrigation.entity.water.charge.Charge;
+import com.water.irrigation.service.sys.user.SysUserService;
 import com.water.irrigation.service.water.charge.ChargeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +39,10 @@ public class ChargeServiceImpl implements ChargeService {
     private ChargeVoDao chargeVoDao;
     @Autowired
     private ChargeDaoImpl chargeDaoImpl;
+    @Autowired
+    private SysUserService sysUserService;
+    @Autowired
+    private ChargeCityDao chargeCityDao;
     /**
      * 根据条件获取对应的水费缴费数据
      *
@@ -44,6 +52,8 @@ public class ChargeServiceImpl implements ChargeService {
      */
     @Override
     public Page<Charge> findAll(ChargeDto conditions, Pageable pageable) {
+        SysUser sysUser=sysUserService.getUser();
+        conditions.setIuserid(sysUser.getIndocno());
         return chargeDao.findAll(getSpecification(conditions), pageable);
     }
 
@@ -128,7 +138,10 @@ public class ChargeServiceImpl implements ChargeService {
                     listPredicates.add(cb.equal(root.get("iyear").as(Integer.class),
                             condition.getIyear()));
                 }
-//                listPredicates.add(cb.equal(root.get("idel").as(Integer.class),0 ));
+                if (condition.getIuserid()!=null && !"".equals(condition.getIuserid())) {
+                    listPredicates.add(cb.equal(root.get("iuserid").as(Integer.class),
+                            condition.getIuserid()));
+                }
                 Predicate[] arrayPredicates = new Predicate[listPredicates.size()];
                 Predicate p = cb.and(listPredicates.toArray(arrayPredicates));
                 return p;
@@ -139,6 +152,8 @@ public class ChargeServiceImpl implements ChargeService {
     @Override
     public Page<ChargeVo> findUserByDyCondition(ChargeVoDto chargeVoDto
             , Pageable pageable){
+        SysUser sysUser=sysUserService.getUser();
+        chargeVoDto.setIuserid(sysUser.getIndocno());
         return chargeDaoImpl.findUserByDyCondition(chargeVoDto, pageable);
     }
     /**
@@ -158,4 +173,36 @@ public class ChargeServiceImpl implements ChargeService {
         map.put("charges",charges);
         return map;
     }
+
+    /**
+     * 政区金额统计
+     * @return
+     */
+    @Override
+    public Map findChargeCity(){
+        Map entity=new HashMap();
+        Calendar date = Calendar.getInstance();
+        Integer year = Integer.valueOf(date.get(Calendar.YEAR));
+        List seriesList=new ArrayList();
+        List<String> name=new ArrayList<String>();
+        for(Integer i=0;i<=1;i++) {
+            List<ChargeCity> chargeCitys = chargeCityDao.findQuery(year-i);
+            Map seriesMap = new HashMap();
+            seriesMap.put("name", year-i+"年");
+            seriesMap.put("type", "bar");
+            List data = new ArrayList();
+            for(ChargeCity chargeCity:chargeCitys){
+                data.add(chargeCity.getWatermoney());
+                if(i==0) {
+                    name.add(chargeCity.getScity());
+                }
+            }
+            seriesMap.put("data",data);
+            seriesList.add(seriesMap);
+        }
+        entity.put("name",name);
+        entity.put("series",seriesList);
+        return entity;
+    }
+
 }

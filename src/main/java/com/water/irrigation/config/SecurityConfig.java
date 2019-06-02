@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/layuiadmin/**","/my/**","/register_page");
+        web.ignoring().antMatchers("/layuiadmin/**","/my/**","/register_page","/images/**");
     }
 
     @Override

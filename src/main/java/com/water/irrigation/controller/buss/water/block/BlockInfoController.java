@@ -2,7 +2,9 @@ package com.water.irrigation.controller.buss.water.block;
 
 import com.water.irrigation.entity.base.ResultEntity;
 import com.water.irrigation.entity.dto.water.block.BlockInfoDto;
+import com.water.irrigation.entity.sys.user.SysUser;
 import com.water.irrigation.entity.water.block.BlockInfo;
+import com.water.irrigation.service.sys.user.SysUserService;
 import com.water.irrigation.service.water.block.BlockInfoService;
 import com.water.irrigation.utils.dozer.DozerHelperUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,9 @@ public class BlockInfoController {
     private BlockInfoService blockInfoService;
 
     @Autowired
+    private SysUserService sysUserService;
+
+    @Autowired
     private DozerHelperUtils dozerHelperUtils;
 
     /**
@@ -49,6 +54,9 @@ public class BlockInfoController {
             pageno = pageno >= 1 ? pageno-1 : 0;
 
             Pageable pageable = PageRequest.of(pageno,pagesize,sort);
+            SysUser sysUser=sysUserService.getUser();
+            //获取当前用户所属地块
+            blockInfoDto.setIuserid(sysUser.getIndocno());
             Page<BlockInfo> classifies =
                     this.blockInfoService.findAll(blockInfoDto,pageable);
             resultEntity.setCode(ResultEntity.StatusCode.SUCCESS.getCode());

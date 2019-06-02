@@ -40,10 +40,11 @@ public class BlockInfo extends BaseEntity {
      * 正方形Y轴
      */
     private Double squarey;
-//    /**
-//     * 所属用户或者单位id
-//     */
-//    private Long iuserid;
+    /**
+     * 所属用户或者单位id
+     */
+    @Column(insertable = false,updatable = false)
+    private Long iuserid;
     /**
      * 乡镇
      */

@@ -79,6 +79,16 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
+                                <label class="layui-form-label">用户是否可见</label>
+                                <div class="layui-input-inline">
+                                    <!--<input type="text" name="ibtype" lay-verify="number" placeholder="土壤类型" autocomplete="off" class="layui-input">-->
+                                    <select id="iroleid" name="iroleid" lay-verify="">
+                                        <option value="1" selected>可见</option>
+                                        <option value="2" >不可见</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <div class="layui-input-block">
                                     <button class="layui-btn" lay-submit lay-filter="saveMenu">确认保存</button>
                                     <button class="layui-btn" lay-submit lay-filter="deleteMenu">删除菜单</button>
@@ -100,7 +110,7 @@
 <script>
     var result;
     $.ajax({
-        url:"/menu",
+        url:"/menu/readall",
         type:"POST",
         dataType:"JSON",
         cache : false,
@@ -131,6 +141,7 @@
                         ,"parent_id" : item.parent_id
                         ,"score" : item.score
                         ,"level" : item.level
+                        ,"iroleid" : item.iroleid
                     })
                     //各种基于事件的操作，下面会有进一步介绍
                 });
@@ -265,9 +276,11 @@
                         data:field,
                         success:function(data){
                             //alert(data.body.code);
-                            if (data.code == 1 ) {
+                            if (data.code == 0 ) {
                                 layer.alert('添加成功');
-                                window.location.reload();
+                                setTimeout(function(){  //使用  setTimeout（）方法设定定时2000毫秒
+                                    window.location.reload();//页面刷新
+                                },1000);
                                 //两秒后跳转新页面
                                 // window.setTimeout("window.location='login_page'",2000);
                             }else {
@@ -298,9 +311,11 @@
                         },
                         success:function(data){
                             //alert(data.body.code);
-                            if (data.code == 1 ) {
+                            if (data.code == 0 ) {
                                 layer.alert('添加成功');
-                                window.location.reload();
+                                setTimeout(function(){  //使用  setTimeout（）方法设定定时2000毫秒
+                                    window.location.reload();//页面刷新
+                                },1000);
                                 //两秒后跳转新页面
                                 // window.setTimeout("window.location='login_page'",2000);
                             }else {
@@ -327,9 +342,11 @@
                     level:$('#clevel').val()
                 },
                 success:function(data){
-                    if (data.code == 1 ) {
+                    if (data.code == 0 ) {
                         layer.alert('添加成功');
-                        window.location.reload();
+                        setTimeout(function(){  //使用  setTimeout（）方法设定定时2000毫秒
+                            window.location.reload();//页面刷新
+                        },1000);
                         //两秒后跳转新页面
                         // window.setTimeout("window.location='login_page'",2000);
                     }else {
@@ -353,9 +370,11 @@
                     level:$('#tlevel').val()
                 },
                 success:function(data){
-                    if (data.code == 1 ) {
+                    if (data.code == 0 ) {
                         layer.alert('添加成功');
-                        window.location.reload();
+                        setTimeout(function(){  //使用  setTimeout（）方法设定定时2000毫秒
+                            window.location.reload();//页面刷新
+                        },1000);
                         //两秒后跳转新页面
                         // window.setTimeout("window.location='login_page'",2000);
                     }else {

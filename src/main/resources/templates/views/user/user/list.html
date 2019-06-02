@@ -61,7 +61,7 @@
       
       <div class="layui-card-body">
         <div style="padding-bottom: 10px;">
-          <button class="layui-btn layuiadmin-btn-useradmin" data-type="batchdel">删除</button>
+          <!--<button class="layui-btn layuiadmin-btn-useradmin" data-type="batchdel">删除</button>-->
           <button class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加</button>
         </div>
 
@@ -148,6 +148,21 @@
               console.log(field);
               //提交 Ajax 成功后，静态更新表格中的数据
               //$.ajax({});
+              $.ajax({
+                url: '/user/info/add',
+                type: 'post',
+                dataType: 'json',
+                data: field,
+                success: function (data) {
+                  //alert(data.body.code);
+                  if (data.code == 0) {
+                    layer.alert('添加成功');
+                    window.location.reload();
+                  } else {
+                    layer.msg('添加失败');
+                  }
+                }
+              });
               table.reload('LAY-user-front-submit'); //数据刷新
               layer.close(index); //关闭弹层
             });  

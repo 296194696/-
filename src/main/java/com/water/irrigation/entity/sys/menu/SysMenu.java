@@ -1,5 +1,6 @@
 package com.water.irrigation.entity.sys.menu;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -46,18 +47,25 @@ public class SysMenu {
      * 层级
      */
     private Integer level;
-
+    /**
+     * 角色ID
+     */
+    private Integer iroleid;
 
     // 父节点
 //    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //    @JoinColumn(name = "parent_id",insertable = false,updatable = false)
 //    private SysMenu parent;
+    @JsonIgnore//防止死循环，导致栈溢出
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="parent_id",updatable = false,insertable = false)
+    private SysMenu parent;
 
     /**
      * 子类
      */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "parent_id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="parent")
+//    @JoinColumn(name = "parent_id")
     @OrderBy("score asc")
     private List<SysMenu> children = new ArrayList<SysMenu>();
 

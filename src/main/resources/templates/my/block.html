@@ -164,7 +164,6 @@
 //方法级渲染
         table.render({
             elem: '#tblcrop'
-            ,url: '/crop/info/readall'
             ,title: '作物数据表'
             ,toolbar: true
             ,totalRow: true
@@ -194,6 +193,7 @@
                 page: {
                     curr: 1 //重新从第 1 页开始
                 }
+                ,url: '/crop/info/readall'
                 ,where: {
                     iblockid: data.indocno
                 }

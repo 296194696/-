@@ -18,6 +18,12 @@
       </div>
     </div>
     <div class="layui-form-item">
+      <label class="layui-form-label">密码</label>
+      <div class="layui-input-inline">
+        <input type="password" name="password" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
       <label class="layui-form-label">昵称</label>
       <div class="layui-input-inline">
         <input type="text" name="sname" lay-verify="required" placeholder="请输入昵称" autocomplete="off" class="layui-input">
@@ -27,6 +33,17 @@
       <label class="layui-form-label">身份证</label>
       <div class="layui-input-inline">
         <input type="text" name="identity" lay-verify="number" placeholder="请输入身份证" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-inline">
+      <label class="layui-form-label">身份</label>
+      <div class="layui-input-block">
+        <select name="iroleid">
+          <option></option>
+          <option value="1">管理员</option>
+          <option value="2">用水户</option>
+          <option value="3">用水单位</option>
+        </select>
       </div>
     </div>
     <div class="layui-form-item layui-hide">
@@ -49,7 +66,9 @@
       form.val("layuiadmin-form-useradmin", {
         "username": data.username,
         "sname": data.sname,
-        "identity": data.identity
+        "identity": data.identity,
+        "password": data.password,
+        "iroleid": data.password
       });
     }
     upload.render({
